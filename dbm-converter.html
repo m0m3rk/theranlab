@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dBm ↔ Watts Converter | TheRANlab</title>
+<meta name="description" content="Convert RF power between dBm, Watts, milliwatts, and dBW instantly. Free tool for 5G and RF engineers.">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070b0f;
+    --surface: #0d1520;
+    --surface2: #111e2e;
+    --border: #1a2d42;
+    --accent: #00d4ff;
+    --accent-dim: rgba(0,212,255,0.12);
+    --accent2: #ff6b35;
+    --green: #39ff14;
+    --green-dim: rgba(57,255,20,0.1);
+    --text: #c8dae8;
+    --muted: #4a6880;
+    --white: #eaf4ff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 20px 80px;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(0,212,255,0.06) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 100%, rgba(57,255,20,0.04) 0%, transparent 55%);
+  }
+
+  /* NAV */
+  .nav {
+    width: 100%;
+    max-width: 680px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+  }
+
+  .nav-logo {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 15px;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 1px;
+  }
+
+  .nav-logo span { color: var(--muted); }
+
+  .nav-back {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 1px;
+    transition: color 0.2s;
+  }
+
+  .nav-back:hover { color: var(--accent); }
+
+  /* HEADER */
+  .header {
+    width: 100%;
+    max-width: 680px;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.5s ease 0.1s forwards;
+  }
+
+  .tool-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: clamp(26px, 5vw, 38px);
+    color: var(--white);
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+
+  h1 .arrow {
+    color: var(--accent);
+    margin: 0 6px;
+  }
+
+  .desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* MAIN CARD */
+  .card {
+    width: 100%;
+    max-width: 680px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    opacity: 0;
+    animation: fadeUp 0.5s ease 0.2s forwards;
+  }
+
+  .card-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tab {
+    flex: 1;
+    padding: 16px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    border-bottom: 2px solid transparent;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+
+  .tab:hover { color: var(--text); }
+
+  .tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .card-body {
+    padding: 32px;
+  }
+
+  /* INPUT GROUP */
+  .input-group {
+    margin-bottom: 28px;
+  }
+
+  .input-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .input-wrap {
+    flex: 1;
+    position: relative;
+  }
+
+  input[type="number"] {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 20px;
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -moz-appearance: textfield;
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+  input[type="number"]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0,212,255,0.08);
+  }
+
+  .input-unit {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    background: var(--accent-dim);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 6px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    letter-spacing: 1px;
+  }
+
+  /* CONVERT BUTTON */
+  .btn-convert {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(0,212,255,0.05));
+    border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 6px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  .btn-convert:hover {
+    background: linear-gradient(135deg, rgba(0,212,255,0.25), rgba(0,212,255,0.1));
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(0,212,255,0.15);
+  }
+
+  /* RESULTS */
+  .results {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .result-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    transition: border-color 0.3s;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .result-card:hover { border-color: var(--muted); }
+
+  .result-card.highlight {
+    border-color: rgba(57,255,20,0.4);
+    background: var(--green-dim);
+  }
+
+  .result-unit {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .result-value {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 22px;
+    color: var(--white);
+    letter-spacing: -0.5px;
+    word-break: break-all;
+  }
+
+  .result-card.highlight .result-value { color: var(--green); }
+
+  .copy-hint {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 4px;
+    font-family: 'Share Tech Mono', monospace;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .result-card:hover .copy-hint { opacity: 1; }
+
+  .copied-toast {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: var(--green);
+    letter-spacing: 1px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .copied-toast.show { opacity: 1; }
+
+  /* REFERENCE TABLE */
+  .ref-section {
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+  }
+
+  .ref-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .ref-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .ref-table th {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    text-align: left;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 400;
+  }
+
+  .ref-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(26,45,66,0.5);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .ref-table tr:hover td { background: var(--surface2); }
+  .ref-table tr:last-child td { border-bottom: none; }
+
+  .ref-table td:first-child { color: var(--accent); }
+  .ref-table td:last-child { color: var(--muted); font-size: 11px; }
+
+  /* FORMULA */
+  .formula-box {
+    width: 100%;
+    max-width: 680px;
+    margin-top: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px 32px;
+    opacity: 0;
+    animation: fadeUp 0.5s ease 0.35s forwards;
+  }
+
+  .formula-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .formula-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .formula-item {
+    background: var(--surface2);
+    border-radius: 6px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+  }
+
+  .formula-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-weight: 300;
+  }
+
+  .formula-eq {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+  }
+
+  /* FOOTER */
+  .footer {
+    width: 100%;
+    max-width: 680px;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.5s ease 0.45s forwards;
+  }
+
+  .footer-left {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .footer-left a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .footer-tools {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  /* ERROR */
+  .error-msg {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: var(--accent2);
+    margin-top: 8px;
+    display: none;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  @media (max-width: 520px) {
+    .card-body { padding: 20px; }
+    .results { grid-template-columns: 1fr; }
+    .formula-grid { grid-template-columns: 1fr; }
+    .footer { flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">TheRAN<span>lab</span>.com</a>
+  <a href="/tools" class="nav-back">← ALL TOOLS</a>
+</nav>
+
+<div class="header">
+  <div class="tool-tag">// TOOL 01 — RF POWER</div>
+  <h1>dBm <span class="arrow">↔</span> Watts</h1>
+  <p class="desc">Convert RF power between dBm, Watts, milliwatts, and dBW. Click any reference value to load it instantly.</p>
+</div>
+
+<div class="card">
+  <div class="card-tabs">
+    <button class="tab active" onclick="switchTab('dbm')" id="tab-dbm">dBm → Watts</button>
+    <button class="tab" onclick="switchTab('watts')" id="tab-watts">Watts → dBm</button>
+  </div>
+
+  <div class="card-body">
+
+    <!-- dBm INPUT -->
+    <div class="input-group" id="group-dbm">
+      <label class="input-label">Input Power</label>
+      <div class="input-row">
+        <div class="input-wrap">
+          <input type="number" id="input-dbm" placeholder="e.g. 30" step="0.1" oninput="convertDbm()">
+        </div>
+        <div class="input-unit">dBm</div>
+      </div>
+      <div class="error-msg" id="err-dbm">Enter a valid number</div>
+    </div>
+
+    <!-- Watts INPUT -->
+    <div class="input-group" id="group-watts" style="display:none">
+      <label class="input-label">Input Power</label>
+      <div class="input-row">
+        <div class="input-wrap">
+          <input type="number" id="input-watts" placeholder="e.g. 1" step="any" min="0" oninput="convertWatts()">
+        </div>
+        <div class="input-unit">W</div>
+      </div>
+      <div class="error-msg" id="err-watts">Enter a positive number</div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results" id="results">
+      <div class="result-card highlight" onclick="copyVal('res-watts')" id="card-watts">
+        <div class="copied-toast" id="toast-watts">COPIED</div>
+        <div class="result-unit">Watts</div>
+        <div class="result-value" id="res-watts">—</div>
+        <div class="copy-hint">click to copy</div>
+      </div>
+      <div class="result-card" onclick="copyVal('res-mw')" id="card-mw">
+        <div class="copied-toast" id="toast-mw">COPIED</div>
+        <div class="result-unit">Milliwatts</div>
+        <div class="result-value" id="res-mw">—</div>
+        <div class="copy-hint">click to copy</div>
+      </div>
+      <div class="result-card" onclick="copyVal('res-dbw')" id="card-dbw">
+        <div class="copied-toast" id="toast-dbw">COPIED</div>
+        <div class="result-unit">dBW</div>
+        <div class="result-value" id="res-dbw">—</div>
+        <div class="copy-hint">click to copy</div>
+      </div>
+      <div class="result-card" onclick="copyVal('res-dbm-out')" id="card-dbm-out">
+        <div class="copied-toast" id="toast-dbm-out">COPIED</div>
+        <div class="result-unit">dBm</div>
+        <div class="result-value" id="res-dbm-out">—</div>
+        <div class="copy-hint">click to copy</div>
+      </div>
+    </div>
+
+    <!-- REFERENCE TABLE -->
+    <div class="ref-section">
+      <div class="ref-title">// Common RF Power Reference Values</div>
+      <table class="ref-table">
+        <thead>
+          <tr>
+            <th>dBm</th>
+            <th>Watts</th>
+            <th>Context</th>
+          </tr>
+        </thead>
+        <tbody id="ref-body"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- FORMULA BOX -->
+<div class="formula-box">
+  <div class="formula-title">// Conversion Formulas</div>
+  <div class="formula-grid">
+    <div class="formula-item">
+      <div class="formula-label">dBm to Watts</div>
+      <div class="formula-eq">P(W) = 10^((dBm-30)/10)</div>
+    </div>
+    <div class="formula-item">
+      <div class="formula-label">Watts to dBm</div>
+      <div class="formula-eq">dBm = 10·log₁₀(W) + 30</div>
+    </div>
+    <div class="formula-item">
+      <div class="formula-label">dBm to dBW</div>
+      <div class="formula-eq">dBW = dBm − 30</div>
+    </div>
+    <div class="formula-item">
+      <div class="formula-label">dBm to mW</div>
+      <div class="formula-eq">mW = 10^(dBm/10)</div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-left"><a href="/">TheRANlab.com</a> — Free tools for 5G & O-RAN engineers</div>
+  <div class="footer-tools">TOOL 01 / 15</div>
+</footer>
+
+<script>
+  const refs = [
+    { dbm: -120, label: "Typical LTE noise floor" },
+    { dbm: -100, label: "Weak 5G NR signal (cell edge)" },
+    { dbm: -90,  label: "Poor RSRP threshold" },
+    { dbm: -70,  label: "Acceptable indoor coverage" },
+    { dbm: -50,  label: "Good signal strength" },
+    { dbm: 0,    label: "1 mW reference level" },
+    { dbm: 10,   label: "10 mW (small cell TX)" },
+    { dbm: 20,   label: "100 mW (0.1W)" },
+    { dbm: 23,   label: "200 mW (UE max TX power)" },
+    { dbm: 30,   label: "1 W (pico cell)" },
+    { dbm: 33,   label: "2 W (typical UE max)" },
+    { dbm: 40,   label: "10 W (small base station)" },
+    { dbm: 43,   label: "20 W" },
+    { dbm: 46,   label: "40 W (macro cell)" },
+    { dbm: 49,   label: "80 W" },
+  ];
+
+  let activeTab = 'dbm';
+
+  function formatWatts(w) {
+    if (w === 0) return "0 W";
+    const abs = Math.abs(w);
+    if (abs >= 1000) return (w / 1000).toPrecision(4) + " kW";
+    if (abs >= 1) return w.toPrecision(4) + " W";
+    if (abs >= 0.001) return (w * 1000).toPrecision(4) + " mW";
+    if (abs >= 0.000001) return (w * 1e6).toPrecision(4) + " μW";
+    return (w * 1e9).toPrecision(4) + " nW";
+  }
+
+  function buildRefTable() {
+    const tbody = document.getElementById('ref-body');
+    tbody.innerHTML = '';
+    refs.forEach(r => {
+      const w = Math.pow(10, (r.dbm - 30) / 10);
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${r.dbm} dBm</td>
+        <td>${formatWatts(w)}</td>
+        <td>${r.label}</td>
+      `;
+      tr.onclick = () => loadRef(r.dbm);
+      tbody.appendChild(tr);
+    });
+  }
+
+  function loadRef(dbm) {
+    switchTab('dbm');
+    document.getElementById('input-dbm').value = dbm;
+    convertDbm();
+  }
+
+  function switchTab(tab) {
+    activeTab = tab;
+    document.getElementById('tab-dbm').classList.toggle('active', tab === 'dbm');
+    document.getElementById('tab-watts').classList.toggle('active', tab === 'watts');
+    document.getElementById('group-dbm').style.display = tab === 'dbm' ? '' : 'none';
+    document.getElementById('group-watts').style.display = tab === 'watts' ? '' : 'none';
+
+    // Update highlight
+    document.getElementById('card-watts').classList.toggle('highlight', tab === 'dbm');
+    document.getElementById('card-dbm-out').classList.toggle('highlight', tab === 'watts');
+    document.getElementById('card-mw').classList.remove('highlight');
+    document.getElementById('card-dbw').classList.remove('highlight');
+
+    clearResults();
+  }
+
+  function clearResults() {
+    ['res-watts','res-mw','res-dbw','res-dbm-out'].forEach(id => {
+      document.getElementById(id).textContent = '—';
+    });
+  }
+
+  function convertDbm() {
+    const val = parseFloat(document.getElementById('input-dbm').value);
+    const err = document.getElementById('err-dbm');
+    if (isNaN(val)) { err.style.display = 'block'; clearResults(); return; }
+    err.style.display = 'none';
+
+    const watts = Math.pow(10, (val - 30) / 10);
+    const mw = Math.pow(10, val / 10);
+    const dbw = val - 30;
+
+    document.getElementById('res-watts').textContent = formatWatts(watts);
+    document.getElementById('res-mw').textContent = mw < 0.001 ? mw.toExponential(3) + ' mW' : mw.toPrecision(4) + ' mW';
+    document.getElementById('res-dbw').textContent = dbw.toFixed(2) + ' dBW';
+    document.getElementById('res-dbm-out').textContent = val.toFixed(2) + ' dBm';
+  }
+
+  function convertWatts() {
+    const val = parseFloat(document.getElementById('input-watts').value);
+    const err = document.getElementById('err-watts');
+    if (isNaN(val) || val <= 0) { err.style.display = 'block'; clearResults(); return; }
+    err.style.display = 'none';
+
+    const dbm = 10 * Math.log10(val) + 30;
+    const mw = val * 1000;
+    const dbw = 10 * Math.log10(val);
+
+    document.getElementById('res-watts').textContent = formatWatts(val);
+    document.getElementById('res-mw').textContent = mw < 0.001 ? mw.toExponential(3) + ' mW' : mw.toPrecision(4) + ' mW';
+    document.getElementById('res-dbw').textContent = dbw.toFixed(2) + ' dBW';
+    document.getElementById('res-dbm-out').textContent = dbm.toFixed(2) + ' dBm';
+  }
+
+  function copyVal(id) {
+    const el = document.getElementById(id);
+    const text = el.textContent;
+    if (text === '—') return;
+    navigator.clipboard.writeText(text).then(() => {
+      const toastId = 'toast-' + id.replace('res-', '');
+      const toast = document.getElementById(toastId);
+      if (toast) {
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 1200);
+      }
+    });
+  }
+
+  buildRefTable();
+</script>
+</body>
+</html>
