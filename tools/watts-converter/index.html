@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Watts to dBm Conversion Calculator | TheRANlab</title>
-<meta name="description" content="Convert watts to dBm instantly. Includes formula, worked example, and full reference table for RF and 5G engineers.">
+<meta name="description" content="Convert watts to dBm instantly. Includes formula, worked example, and full reference table for RF and RAN engineers.">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -16,10 +16,10 @@
     --muted2: #aaaaaa;
     --border: #e0e0e0;
     --border2: #cccccc;
-    --orange: #e84c0e;
-    --orange-dark: #c43a08;
-    --orange-light: #fff4f0;
-    --orange-mid: #ffc9b5;
+    --orange: #e8720c;
+    --orange-dark: #c45a08;
+    --orange-light: #fff7f0;
+    --orange-mid: #fcd9b8;
     --shadow-sm: 0 1px 4px rgba(0,0,0,0.08);
     --shadow: 0 2px 12px rgba(0,0,0,0.10);
     --shadow-lg: 0 6px 32px rgba(0,0,0,0.12);
@@ -68,15 +68,30 @@
   .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
 
   .logo-mark {
-    width: 34px; height: 34px;
+    width: 38px; height: 38px;
     background: var(--ink);
-    border-radius: 7px;
+    border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
 
-  .logo-name { font-size: 16px; font-weight: 800; color: var(--ink); letter-spacing: -0.5px; }
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+    gap: 2px;
+  }
+
+  .logo-name { font-size: 17px; font-weight: 800; color: var(--ink); letter-spacing: -0.5px; }
   .logo-name em { font-style: normal; color: var(--orange); }
+
+  .logo-sub {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--muted2);
+    text-transform: uppercase;
+  }
 
   .nav-links { display: flex; gap: 6px; align-items: center; }
 
@@ -162,7 +177,7 @@
     overflow: hidden; transition: border-color 0.15s, box-shadow 0.15s;
     background: var(--white); margin-bottom: 6px;
   }
-  .input-wrap:focus-within { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(232,76,14,0.12); }
+  .input-wrap:focus-within { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(232,114,12,0.12); }
   .input-wrap input {
     flex: 1; border: none; outline: none; background: transparent;
     padding: 18px 20px; font-family: 'JetBrains Mono', monospace;
@@ -301,7 +316,7 @@
 <body>
 
 <div class="topbar">
-  <span>Free tools for 5G &amp; O-RAN engineers</span>
+  <span>Free tools for RAN engineers &mdash; 4G, 5G, O-RAN &amp; vRAN</span>
   <div style="display:flex;gap:16px;">
     <a href="/newsletter">Newsletter</a>
     <a href="/about">About</a>
@@ -311,13 +326,14 @@
 <nav>
   <a href="/" class="logo">
     <div class="logo-mark">
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-        <rect x="2" y="8" width="5" height="8" rx="1.5" fill="#e84c0e"/>
-        <rect x="10" y="3" width="5" height="13" rx="1.5" fill="white" opacity="0.9"/>
-        <rect x="2" y="2" width="5" height="4" rx="1.5" fill="white" opacity="0.35"/>
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="1,11 4,11 6,5 8,17 10,9 12,13 14,11 21,11" stroke="#e8720c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
       </svg>
     </div>
-    <span class="logo-name">TheRAN<em>lab</em></span>
+    <div class="logo-text">
+      <span class="logo-name">TheRAN<em>lab</em></span>
+      <span class="logo-sub">RF Tools</span>
+    </div>
   </a>
   <div class="nav-links">
     <a href="/tools" class="nav-link active">Tools</a>
@@ -329,8 +345,8 @@
 <div class="hero">
   <div class="hero-inner">
     <div class="hero-tag">RF Power Converter</div>
-    <h1>Watts <span class="sep">→</span> dBm</h1>
-    <p class="hero-sub">Convert power in watts to dBm — with formula, worked examples, and a full reference table.</p>
+    <h1>Watts <span class="sep">&rarr;</span> dBm</h1>
+    <p class="hero-sub">Convert power in watts to dBm &mdash; with formula, worked examples, and a full reference table.</p>
     <div class="hero-meta">
       <div class="hero-meta-item">Category: <span>RF / Power</span></div>
       <div class="hero-meta-item">Instant calculation: <span>Yes</span></div>
@@ -341,9 +357,9 @@
 
 <div class="breadcrumb-bar">
   <div class="breadcrumb">
-    <a href="/">Home</a><span>›</span>
-    <a href="/tools">Tools</a><span>›</span>
-    <a href="/tools/dbm-converter.html">dBm ↔ Watts</a><span>›</span>
+    <a href="/">Home</a><span>&rsaquo;</span>
+    <a href="/tools">Tools</a><span>&rsaquo;</span>
+    <a href="/tools/dbm-converter">dBm &harr; Watts</a><span>&rsaquo;</span>
     <span>Watts to dBm</span>
   </div>
 </div>
@@ -359,7 +375,7 @@
 
     <div id="calculator">
       <h2 class="sec-heading">Watts to dBm Conversion Calculator</h2>
-      <p class="sec-desc">Enter power in watts — result updates instantly. Click any result card to copy it.</p>
+      <p class="sec-desc">Enter power in watts &mdash; result updates instantly. Click any result card to copy it.</p>
 
       <div class="calc-card">
         <div class="calc-body">
@@ -372,25 +388,25 @@
           <div class="results">
             <div class="res primary" onclick="cp('val-dbm','fl-dbm')">
               <div class="res-label">dBm</div>
-              <div class="res-val" id="val-dbm">—</div>
+              <div class="res-val" id="val-dbm">&mdash;</div>
               <div class="res-hint">click to copy</div>
               <div class="copy-flash" id="fl-dbm">COPIED</div>
             </div>
             <div class="res" onclick="cp('val-dbw','fl-dbw')">
               <div class="res-label">dBW</div>
-              <div class="res-val" id="val-dbw">—</div>
+              <div class="res-val" id="val-dbw">&mdash;</div>
               <div class="res-hint">click to copy</div>
               <div class="copy-flash" id="fl-dbw">COPIED</div>
             </div>
             <div class="res" onclick="cp('val-mw','fl-mw')">
               <div class="res-label">Milliwatts</div>
-              <div class="res-val" id="val-mw">—</div>
+              <div class="res-val" id="val-mw">&mdash;</div>
               <div class="res-hint">click to copy</div>
               <div class="copy-flash" id="fl-mw">COPIED</div>
             </div>
             <div class="res" onclick="cp('val-w-out','fl-w-out')">
               <div class="res-label">Watts</div>
-              <div class="res-val" id="val-w-out">—</div>
+              <div class="res-val" id="val-w-out">&mdash;</div>
               <div class="res-hint">click to copy</div>
               <div class="copy-flash" id="fl-w-out">COPIED</div>
             </div>
@@ -404,32 +420,32 @@
 
           <div class="formula-grid">
             <div class="formula-pill">
-              <div class="formula-pill-label">Watts → dBm</div>
-              <div class="formula-pill-eq">dBm = 10·log₁₀(W) + 30</div>
+              <div class="formula-pill-label">Watts &rarr; dBm</div>
+              <div class="formula-pill-eq">dBm = 10&middot;log&#8321;&#8320;(W) + 30</div>
             </div>
             <div class="formula-pill">
-              <div class="formula-pill-label">Watts → dBW</div>
-              <div class="formula-pill-eq">dBW = 10·log₁₀(W)</div>
+              <div class="formula-pill-label">Watts &rarr; dBW</div>
+              <div class="formula-pill-eq">dBW = 10&middot;log&#8321;&#8320;(W)</div>
             </div>
             <div class="formula-pill">
-              <div class="formula-pill-label">Watts → mW</div>
-              <div class="formula-pill-eq">mW = W × 1000</div>
+              <div class="formula-pill-label">Watts &rarr; mW</div>
+              <div class="formula-pill-eq">mW = W &times; 1000</div>
             </div>
             <div class="formula-pill">
-              <div class="formula-pill-label">dBm → Watts</div>
-              <div class="formula-pill-eq">W = 10^((dBm−30)/10)</div>
+              <div class="formula-pill-label">dBm &rarr; Watts</div>
+              <div class="formula-pill-eq">W = 10^((dBm&minus;30)/10)</div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <a href="/tools/dbm-converter.html" class="next-link-card">
+    <a href="/tools/dbm-converter" class="next-link-card">
       <div>
         <div class="next-link-label">See also</div>
-        <div class="next-link-title">← dBm to Watts Conversion Calculator</div>
+        <div class="next-link-title">&larr; dBm to Watts Conversion Calculator</div>
       </div>
-      <div class="next-link-arrow">←</div>
+      <div class="next-link-arrow">&larr;</div>
     </a>
 
     <div id="formula" class="content-card">
@@ -437,14 +453,14 @@
       <p class="sec-desc">dBm is a logarithmic scale relative to 1 milliwatt. To convert from linear watts, take the base-10 log of the wattage, multiply by 10, and add 30.</p>
 
       <div class="formula-block">
-        <div class="formula-block-title">Watts to dBm — Formula</div>
-        <div class="formula-display">P(dBm) = 10 × log₁₀(P(W) / 1W) + 30</div>
+        <div class="formula-block-title">Watts to dBm &mdash; Formula</div>
+        <div class="formula-display">P(dBm) = 10 &times; log&#8321;&#8320;(P(W) / 1W) + 30</div>
         <div class="formula-note">The +30 shifts the reference from dBW (relative to 1 W) to dBm (relative to 1 mW = 0.001 W).</div>
         <div class="example">
-          <div class="example-title">Example — Convert 20 watts to dBm</div>
+          <div class="example-title">Example &mdash; Convert 20 watts to dBm</div>
           <div class="example-body">
-            P(dBm) = 10 × log₁₀(20) + 30<br>
-            P(dBm) = 10 × 1.3010 + 30<br>
+            P(dBm) = 10 &times; log&#8321;&#8320;(20) + 30<br>
+            P(dBm) = 10 &times; 1.3010 + 30<br>
             P(dBm) = 13.01 + 30<br>
             P(dBm) = <strong>43.01 dBm</strong>
           </div>
@@ -454,10 +470,10 @@
       <div class="formula-block" style="margin-bottom:0">
         <div class="formula-block-title">Quick Rules to Remember</div>
         <div class="formula-note" style="line-height:2;">
-          • <strong style="color:var(--orange)">0.001 W (1 mW)</strong> = 0 dBm (the reference)<br>
-          • <strong style="color:var(--orange)">Doubling</strong> power adds ~3 dBm<br>
-          • <strong style="color:var(--orange)">10× power</strong> adds exactly 10 dBm<br>
-          • <strong style="color:var(--orange)">1 W</strong> = 30 dBm &nbsp;·&nbsp; <strong style="color:var(--orange)">10 W</strong> = 40 dBm &nbsp;·&nbsp; <strong style="color:var(--orange)">100 W</strong> = 50 dBm
+          &bull; <strong style="color:var(--orange)">0.001 W (1 mW)</strong> = 0 dBm (the reference)<br>
+          &bull; <strong style="color:var(--orange)">Doubling</strong> power adds ~3 dBm<br>
+          &bull; <strong style="color:var(--orange)">10&times; power</strong> adds exactly 10 dBm<br>
+          &bull; <strong style="color:var(--orange)">1 W</strong> = 30 dBm &nbsp;&middot;&nbsp; <strong style="color:var(--orange)">10 W</strong> = 40 dBm &nbsp;&middot;&nbsp; <strong style="color:var(--orange)">100 W</strong> = 50 dBm
         </div>
       </div>
     </div>
@@ -485,13 +501,13 @@
     <div id="seealso" class="content-card">
       <h2 class="sec-heading" style="margin-bottom:16px;">See Also</h2>
       <div class="see-also-grid">
-        <a href="/tools/dbm-converter.html">dBm to Watts Conversion Calculator</a>
-        <a href="/tools/link-budget.html">RF Link Budget Calculator</a>
-        <a href="/tools/fspl.html">Free Space Path Loss (FSPL) Calculator</a>
-        <a href="/tools/vswr.html">VSWR ↔ Return Loss Converter</a>
-        <a href="/tools/noise-figure.html">Noise Figure / Cascade Calculator</a>
-        <a href="/tools/eirp.html">EIRP Calculator (FCC / ETSI limits)</a>
-        <a href="/tools">All RF &amp; 5G Tools →</a>
+        <a href="/tools/dbm-converter">dBm to Watts Conversion Calculator</a>
+        <a href="/tools/link-budget">RF Link Budget Calculator</a>
+        <a href="/tools/fspl">Free Space Path Loss (FSPL) Calculator</a>
+        <a href="/tools/vswr">VSWR &harr; Return Loss Converter</a>
+        <a href="/tools/noise-figure">Noise Figure / Cascade Calculator</a>
+        <a href="/tools/eirp">EIRP Calculator (FCC / ETSI limits)</a>
+        <a href="/tools">All RF &amp; RAN Tools &rarr;</a>
       </div>
     </div>
   </main>
@@ -509,20 +525,20 @@
         <p><strong>1 W</strong> = 30 dBm</p>
         <p><strong>10 W</strong> = 40 dBm</p>
         <p><strong>100 W</strong> = 50 dBm</p>
-        <p><strong>2×</strong> power ≈ +3 dBm</p>
-        <p><strong>10×</strong> power = +10 dBm</p>
+        <p><strong>2&times;</strong> power &asymp; +3 dBm</p>
+        <p><strong>10&times;</strong> power = +10 dBm</p>
       </div>
     </div>
 
     <div class="sidebar-card">
       <div class="sidebar-title">Related Tools</div>
       <div class="sidebar-links">
-        <a href="/tools/dbm-converter.html">dBm → Watts</a>
-        <a href="/tools/link-budget.html">RF Link Budget</a>
-        <a href="/tools/fspl.html">Path Loss (FSPL)</a>
-        <a href="/tools/vswr.html">VSWR ↔ Return Loss</a>
-        <a href="/tools/eirp.html">EIRP Calculator</a>
-        <a href="/tools">All Tools →</a>
+        <a href="/tools/dbm-converter">dBm &rarr; Watts</a>
+        <a href="/tools/link-budget">RF Link Budget</a>
+        <a href="/tools/fspl">Path Loss (FSPL)</a>
+        <a href="/tools/vswr">VSWR &harr; Return Loss</a>
+        <a href="/tools/eirp">EIRP Calculator</a>
+        <a href="/tools">All Tools &rarr;</a>
       </div>
     </div>
   </aside>
@@ -532,15 +548,15 @@
   <div class="footer-inner">
     <div>
       <div class="footer-brand-name">TheRAN<em>lab</em></div>
-      <p class="footer-desc">Free RF and 5G engineering tools, calculators, and resources for telecom engineers. Built by engineers, for engineers.</p>
+      <p class="footer-desc">Free RF and RAN engineering tools for 4G, 5G, O-RAN, and vRAN engineers. Built by engineers, for engineers.</p>
     </div>
     <div class="footer-col">
       <div class="footer-col-title">Tools</div>
-      <a href="/tools/dbm-converter.html">dBm ↔ Watts</a>
-      <a href="/tools/link-budget.html">RF Link Budget</a>
-      <a href="/tools/fspl.html">Path Loss</a>
-      <a href="/tools/eirp.html">EIRP Calc</a>
-      <a href="/tools">All Tools →</a>
+      <a href="/tools/dbm-converter">dBm &harr; Watts</a>
+      <a href="/tools/link-budget">RF Link Budget</a>
+      <a href="/tools/fspl">Path Loss</a>
+      <a href="/tools/eirp">EIRP Calc</a>
+      <a href="/tools">All Tools &rarr;</a>
     </div>
     <div class="footer-col">
       <div class="footer-col-title">TheRANlab</div>
@@ -550,22 +566,22 @@
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2025 TheRANlab.com — Free tools for 5G &amp; O-RAN engineers</span>
+    <span>&copy; 2025 TheRANlab.com &mdash; Free tools for RAN engineers</span>
     <span>hello@theranlab.com</span>
   </div>
 </footer>
 
 <script>
   const tableRows = [
-    [0.000001,"1 μW","Near noise floor"],[0.00001,"10 μW",""],
-    [0.0001,"100 μW",""],[0.001,"1 mW","Reference — 0 dBm"],
+    [0.000001,"1 \u03bcW","Near noise floor"],[0.00001,"10 \u03bcW",""],
+    [0.0001,"100 \u03bcW",""],[0.001,"1 mW","Reference \u2014 0 dBm"],
     [0.002,"2 mW",""],[0.005,"5 mW",""],
     [0.010,"10 mW",""],[0.020,"20 mW",""],
     [0.050,"50 mW",""],[0.100,"100 mW",""],
     [0.200,"200 mW","UE max TX (LTE/NR)"],[0.500,"500 mW",""],
-    [1,"1 W","30 dBm — pico cell"],[2,"2 W",""],
+    [1,"1 W","30 dBm \u2014 pico cell"],[2,"2 W",""],
     [5,"5 W",""],[10,"10 W","Small base station"],
-    [20,"20 W","43 dBm — macro BS"],[40,"40 W","Macro cell"],
+    [20,"20 W","43 dBm \u2014 macro BS"],[40,"40 W","Macro cell"],
     [50,"50 W",""],[100,"100 W","50 dBm"],
     [200,"200 W",""],[500,"500 W",""],
     [1000,"1 kW","High power TX"],
@@ -580,7 +596,7 @@
     if(w>=1000) return (w/1000).toPrecision(4)+" kW";
     if(w>=1)    return w.toPrecision(4)+" W";
     if(w>=1e-3) return (w*1e3).toPrecision(4)+" mW";
-    if(w>=1e-6) return (w*1e6).toPrecision(4)+" μW";
+    if(w>=1e-6) return (w*1e6).toPrecision(4)+" \u03bcW";
     return w.toExponential(3)+" W";
   }
 
@@ -617,12 +633,12 @@
   }
 
   function clr() {
-    ['val-dbm','val-dbw','val-mw','val-w-out'].forEach(id=>document.getElementById(id).textContent='—');
+    ['val-dbm','val-dbw','val-mw','val-w-out'].forEach(id=>document.getElementById(id).textContent='\u2014');
   }
 
   function cp(valId, flashId) {
     const t = document.getElementById(valId).textContent;
-    if (t==='—') return;
+    if (t==='\u2014') return;
     navigator.clipboard.writeText(t).then(() => {
       const f = document.getElementById(flashId);
       f.classList.add('show');
